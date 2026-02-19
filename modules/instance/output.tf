@@ -1,4 +1,4 @@
 output "instance_id" {
   description = "ID of the Instance"
-  value       = aws_instance.Dev_Instance[*].id
+  value       = {for k,v in aws_instance.Dev_Instance : k => v.id}
 }

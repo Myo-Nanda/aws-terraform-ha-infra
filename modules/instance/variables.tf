@@ -32,9 +32,13 @@ variable "subnet_id" {
   description = "Subnets ID to lauch the instances"
 }
 
-variable "custome_script" {
-  description = "user data for the instance"
+variable "vpc_security_group_id" {
+  description = "Security Group ID to attach in Instance"
 }
+
+# variable "custome_script" {
+#   description = "user data for the instance"
+# }
 
 variable "tag_value" {
   description = "Tag Name"

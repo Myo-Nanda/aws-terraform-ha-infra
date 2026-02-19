@@ -66,15 +66,26 @@ module "Instance_SG" {
   }
 }
 
-# module "Target_Instance" {
-#   source = "./modules/instance"
+data "aws_ami" "ami_id" {
+  most_recent = true
 
-#   instance_number = 2
-#   subnet_id = module.Dev_VPC.private_subnet_id
-#   custome_script = "./custome_script.sh"
-# }
+  filter {
+    name   = "name"
+    values = ["al2023-ami-2023*-kernel-6.1-x86_64"]
+  }
 
-output "private_subnet_id" {
-  description = "IDs for Private Subnets"
-  value       = module.Dev_VPC.private_subnet_id
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["137112412989"]
+}
+
+module "Target_Instance" {
+  source = "./modules/instance"
+
+  subnet_id             = module.Dev_VPC.private_subnet_id
+  vpc_security_group_id = module.Instance_SG.SG_id
+  ami_id = data.aws_ami.ami_id.id
 }
