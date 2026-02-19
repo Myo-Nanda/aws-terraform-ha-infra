@@ -1,31 +1,31 @@
 variable "key_name" {
   description = "SSH Key name for Instance"
-  type = string
-  default = "DEV_key"
+  type        = string
+  default     = "DEV_key"
 }
 
 variable "key_path" {
   description = "File path to the ssh public key"
-  type = string
-  default = "/home/robin/.ssh/id_rsa.pub"
+  type        = string
+  default     = "/home/robin/.ssh/id_rsa.pub"
 }
 
 variable "instance_number" {
   description = "Number instance to launch"
-  type = number
-  default = 1
+  type        = number
+  default     = 1
 }
 
 variable "ami_id" {
   description = "ID for AMI"
-  type = string
-  default = "ami-0ac0e4288aa341886"
+  type        = string
+  default     = "ami-0ac0e4288aa341886"
 }
 
 variable "instance_type" {
   description = "Instance Type for the instance"
-  type = string
-  default = "t3.micro"
+  type        = string
+  default     = "t3.micro"
 }
 
 variable "subnet_id" {
@@ -38,6 +38,6 @@ variable "custome_script" {
 
 variable "tag_value" {
   description = "Tag Name"
-  type = string
-  default = "Dev"
+  type        = string
+  default     = "Dev"
 }

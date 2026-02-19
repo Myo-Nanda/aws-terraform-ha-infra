@@ -43,8 +43,8 @@ module "ALB_SG" {
 }
 
 module "Instance_SG" {
-  depends_on = [ module.ALB_SG ]
-  source = "./modules/security_group"
+  depends_on = [module.ALB_SG]
+  source     = "./modules/security_group"
 
   vpc_id         = module.Dev_VPC.vpc_id
   sg_name        = "Instance"
@@ -52,10 +52,10 @@ module "Instance_SG" {
 
   sg_rule = {
     "http" = {
-      port        = 80
-      protocol    = "tcp"
+      port                     = 80
+      protocol                 = "tcp"
       source_security_group_id = module.ALB_SG.SG_id
-      type        = "ingress"
+      type                     = "ingress"
     }
     "all" = {
       port        = 0

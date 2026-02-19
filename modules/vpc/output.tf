@@ -15,10 +15,10 @@ output "private_subnet_id" {
 
 output "igw_id" {
   description = "ID for internet gateway"
-  value = aws_internet_gateway.Dev_IGW.id
+  value       = aws_internet_gateway.Dev_IGW.id
 }
 
 output "vpc_cidr_block" {
   description = "CIDR Block of the VPC"
-  value = aws_vpc.Dev_VPC.cidr_block
+  value       = aws_vpc.Dev_VPC.cidr_block
 }
