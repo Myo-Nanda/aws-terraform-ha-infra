@@ -18,3 +18,50 @@ module "Dev_VPC" {
 
   sub_number = 2
 }
+
+module "ALB_SG" {
+  source = "./modules/security_group"
+
+  vpc_id         = module.Dev_VPC.vpc_id
+  sg_name        = "ALB"
+  sg_description = "Security Group for Load Balancer"
+
+  sg_rule = {
+    "http" = {
+      port        = 80
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+      type        = "ingress"
+    }
+    "all" = {
+      port        = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+      type        = "egress"
+    }
+  }
+}
+
+module "Instance_SG" {
+  depends_on = [ module.ALB_SG ]
+  source = "./modules/security_group"
+
+  vpc_id         = module.Dev_VPC.vpc_id
+  sg_name        = "Instance"
+  sg_description = "Security Group for Instances"
+
+  sg_rule = {
+    "http" = {
+      port        = 80
+      protocol    = "tcp"
+      source_security_group_id = module.ALB_SG.SG_id
+      type        = "ingress"
+    }
+    "all" = {
+      port        = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+      type        = "egress"
+    }
+  }
+}
