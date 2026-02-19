@@ -65,3 +65,16 @@ module "Instance_SG" {
     }
   }
 }
+
+# module "Target_Instance" {
+#   source = "./modules/instance"
+
+#   instance_number = 2
+#   subnet_id = module.Dev_VPC.private_subnet_id
+#   custome_script = "./custome_script.sh"
+# }
+
+output "private_subnet_id" {
+  description = "IDs for Private Subnets"
+  value       = module.Dev_VPC.private_subnet_id
+}
