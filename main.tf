@@ -87,5 +87,28 @@ module "Target_Instance" {
 
   subnet_id             = module.Dev_VPC.private_subnet_id
   vpc_security_group_id = module.Instance_SG.SG_id
-  ami_id = data.aws_ami.ami_id.id
+  ami_id                = data.aws_ami.ami_id.id
+  custome_script = "./custome_script.sh"
+}
+
+module "Application_LoadBalaner" {
+  source = "./modules/loadblancer"
+
+  vpc_id                = module.Dev_VPC.vpc_id
+  subnet_id             = module.Dev_VPC.public_subnet_id
+  vpc_security_group_id = module.ALB_SG.SG_id
+  instance_id           = values(module.Target_Instance.instance_id)
+  tg_name               = "dev-vms"
+}
+
+output "instance_id" {
+  value = module.Target_Instance.instance_id
+}
+
+output "target_group_arn" {
+  value = module.Application_LoadBalaner.target_group_arn
+}
+
+output "alb_dns_name" {
+  value = module.Application_LoadBalaner.alb_dns_name
 }
