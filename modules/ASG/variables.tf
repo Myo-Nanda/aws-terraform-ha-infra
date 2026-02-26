@@ -1,0 +1,78 @@
+variable "launch_template_name" {
+  description = "Name of Launch Template"
+  type        = string
+  default     = "dev-launch-template"
+}
+
+variable "ami_id" {
+  description = "ID for AMI"
+  type        = string
+  default     = "ami-0ac0e4288aa341886"
+}
+
+variable "instance_type" {
+  description = "Type of EC2 instance"
+  type        = string
+  default     = "t3.micro"
+}
+
+variable "key_name" {
+  description = "SSH Key Pair Name"
+  type        = string
+}
+
+variable "vpc_security_id" {
+  description = "VPC Security Group ID"
+  type        = string
+}
+
+variable "custome_script" {
+  description = "Path to custom script file"
+  type        = string
+}
+
+variable "tag_value" {
+  description = "Tag Name"
+  type        = string
+  default     = "Dev"
+}
+
+variable "asg_name" {
+  description = "Name of Auto Scaling Group"
+  type        = string
+  default     = "dev-auto-scaling-group"
+}
+
+variable "max_size" {
+  description = "Maximum size of Auto Scaling Group"
+  type        = number
+  default     = 3
+}
+
+variable "min_size" {
+  description = "Minimum size of Auto Scaling Group"
+  type        = number
+  default     = 1
+}
+
+variable "desired_capacity" {
+  description = "Desired capacity of Auto Scaling Group"
+  type        = number
+  default     = 2
+}
+
+variable "ASG_version" {
+  description = "Launch Template version"
+  type        = string
+  default     = "$Latest"
+}
+
+variable "target_group_arn" {
+  description = "ARN of Target Group"
+  type        = string
+}
+
+variable "subnet_id" {
+  description = "Subnets ID to lauch the instances"
+  type        = list(string)
+}

@@ -30,10 +30,12 @@ variable "instance_type" {
 
 variable "subnet_id" {
   description = "Subnets ID to lauch the instances"
+  type        = list(string)
 }
 
 variable "vpc_security_group_id" {
   description = "Security Group ID to attach in Instance"
+  type        = string
 }
 
 variable "custome_script" {

@@ -18,9 +18,9 @@ resource "aws_lb_target_group" "LB_Target_Group" {
 }
 
 resource "aws_lb_target_group_attachment" "LB_Target_Group_Attachment" {
-  for_each         = toset(var.instance_id)
+  for_each         = var.instance_id
   target_group_arn = aws_lb_target_group.LB_Target_Group.arn
-  target_id        = each.key
+  target_id        = each.value
   port             = var.port
 }
 

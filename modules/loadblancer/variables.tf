@@ -27,7 +27,7 @@ variable "tag_value" {
 variable "tg_name" {
   description = "target group attributes"
   type        = string
-  default = "dev-vms"
+  default     = "dev-vms"
 }
 
 variable "vpc_id" {
