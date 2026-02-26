@@ -30,6 +30,60 @@ resource "aws_autoscaling_group" "Auto_Scaling_Group" {
   }
 
   vpc_zone_identifier = var.subnet_id
-  #   target_group_arns         = [var.target_group_arn]
+  target_group_arns         = [var.target_group_arn]
+  
+  lifecycle {
+    ignore_changes = [ desired_capacity ]
+  }
+}
 
+resource "aws_autoscaling_policy" "Scale_Up_Policy" {
+  name                   = "Scale_Up_Policy"
+  autoscaling_group_name = aws_autoscaling_group.Auto_Scaling_Group.name
+  scaling_adjustment     = var.scaling_adjustment
+  adjustment_type        = var.adjustment_type
+  cooldown               = var.cooldown_seconds
+}
+
+resource "aws_autoscaling_policy" "Scale_Down_Policy" {
+  name                   = "Scale_Down_Policy"
+  autoscaling_group_name = aws_autoscaling_group.Auto_Scaling_Group.name
+  scaling_adjustment     = var.scaling_adjustment * -1
+  adjustment_type        = var.adjustment_type
+  cooldown               = var.cooldown_seconds
+  
+}
+
+resource "aws_cloudwatch_metric_alarm" "Scale_Up_Alarm" {
+  alarm_name          = "Scale-Up-Alarm"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = var.evaluation_periods
+  metric_name         = var.metric_name
+  namespace           = var.namespace
+  period              = var.period
+  statistic           = var.statistic
+  threshold           = var.threshold
+  alarm_description   = "Alarm when CPU exceeds threshold"
+  alarm_actions       = [aws_autoscaling_policy.Scale_Up_Policy.arn]
+
+  dimensions = {
+    autoscaling_group_name = aws_autoscaling_group.Auto_Scaling_Group.name
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "Scale_Down_Alarm" {
+  alarm_name          = "Scale-Down-Alarm"
+  comparison_operator = "LessThanThreshold"
+  evaluation_periods  = var.evaluation_periods
+  metric_name         = var.metric_name
+  namespace           = var.namespace
+  period              = var.period
+  statistic           = var.statistic
+  threshold           = var.threshold * -1
+  alarm_description   = "Alarm when CPU drops below threshold"
+  alarm_actions       = [aws_autoscaling_policy.Scale_Down_Policy.arn]
+
+  dimensions = {
+    autoscaling_group_name = aws_autoscaling_group.Auto_Scaling_Group.name
+  }
 }
