@@ -81,61 +81,61 @@ variable "scaling_adjustment" {
   description = "Number of instances to add or remove when the alarm triggers"
   type        = number
   default     = 1
-  
+
 }
 
 variable "adjustment_type" {
   description = "Type of scaling adjustment (e.g., ChangeInCapacity, ExactCapacity, PercentChangeInCapacity)"
   type        = string
   default     = "ChangeInCapacity"
-  
+
 }
 
 variable "cooldown_seconds" {
   description = "Cooldown period in seconds after a scaling activity"
   type        = number
   default     = 300
-  
+
 }
 
 variable "evaluation_periods" {
   description = "Number of periods over which data is compared to the specified threshold"
   type        = number
   default     = 2
-  
+
 }
 
 variable "metric_name" {
   description = "Name of the CloudWatch metric to monitor (e.g., CPUUtilization)"
   type        = string
   default     = "CPUUtilization"
-  
+
 }
 
 variable "namespace" {
   description = "Namespace of the CloudWatch metric (e.g., AWS/EC2)"
   type        = string
   default     = "AWS/EC2"
-  
+
 }
 
 variable "period" {
   description = "The period, in seconds, over which the specified statistic is applied"
   type        = number
   default     = 300
-  
+
 }
 
 variable "statistic" {
   description = "The statistic to apply to the alarm's associated metric"
   type        = string
   default     = "Average"
-  
+
 }
 
 variable "threshold" {
   description = "The value against which the specified statistic is compared"
   type        = number
   default     = 85
-  
+
 }

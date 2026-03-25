@@ -17,12 +17,12 @@ resource "aws_lb_target_group" "LB_Target_Group" {
   vpc_id   = var.vpc_id
 }
 
-resource "aws_lb_target_group_attachment" "LB_Target_Group_Attachment" {
-  for_each         = var.instance_id
-  target_group_arn = aws_lb_target_group.LB_Target_Group.arn
-  target_id        = each.value
-  port             = var.port
-}
+# resource "aws_lb_target_group_attachment" "LB_Target_Group_Attachment" {
+#   for_each         = var.instance_id
+#   target_group_arn = aws_lb_target_group.LB_Target_Group.arn
+#   target_id        = each.value
+#   port             = var.port
+# }
 
 resource "aws_lb_listener" "front_end" {
   load_balancer_arn = aws_lb.Dev_LB.arn

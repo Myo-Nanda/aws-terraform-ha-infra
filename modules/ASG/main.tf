@@ -2,7 +2,7 @@ resource "aws_launch_template" "ASG_Launch_Template" {
   name          = var.launch_template_name
   image_id      = var.ami_id
   instance_type = var.instance_type
-  key_name      = var.key_name
+  # key_name      = var.key_name
 
   vpc_security_group_ids = [var.vpc_security_id]
 
@@ -30,11 +30,17 @@ resource "aws_autoscaling_group" "Auto_Scaling_Group" {
   }
 
   vpc_zone_identifier = var.subnet_id
-  target_group_arns         = [var.target_group_arn]
-  
+  target_group_arns   = [var.target_group_arn]
+
   lifecycle {
-    ignore_changes = [ desired_capacity ]
+    ignore_changes = [desired_capacity]
   }
+}
+
+# Create a new ALB Target Group attachment
+resource "aws_autoscaling_attachment" "example" {
+  autoscaling_group_name = aws_autoscaling_group.Auto_Scaling_Group.name
+  lb_target_group_arn    = var.target_group_arn
 }
 
 resource "aws_autoscaling_policy" "Scale_Up_Policy" {
@@ -51,7 +57,7 @@ resource "aws_autoscaling_policy" "Scale_Down_Policy" {
   scaling_adjustment     = var.scaling_adjustment * -1
   adjustment_type        = var.adjustment_type
   cooldown               = var.cooldown_seconds
-  
+
 }
 
 resource "aws_cloudwatch_metric_alarm" "Scale_Up_Alarm" {

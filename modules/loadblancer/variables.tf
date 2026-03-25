@@ -34,9 +34,9 @@ variable "vpc_id" {
   description = "ID of VPC to associate security group"
 }
 
-variable "instance_id" {
-  description = "ID of Instance to attach at Target Group"
-}
+# variable "instance_id" {
+#   description = "ID of Instance to attach at Target Group"
+# }
 
 variable "port" {
   description = "port"
