@@ -27,6 +27,12 @@ variable "key_name" {
   type        = string
 }
 
+variable "iam_role" {
+  description = "IAM role for instance"
+  type = string
+  default = "EC2-SSM"
+}
+
 variable "vpc_security_id" {
   description = "VPC Security Group ID"
   type        = string

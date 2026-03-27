@@ -9,6 +9,10 @@ resource "aws_launch_template" "ASG_Launch_Template" {
   instance_type = var.instance_type
   key_name      = var.key_name
 
+  iam_instance_profile {
+    name = var.iam_role
+  }
+
   vpc_security_group_ids = [var.vpc_security_id]
 
   user_data = filebase64(var.custome_script)
