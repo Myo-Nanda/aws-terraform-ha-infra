@@ -57,6 +57,12 @@ module "Instance_SG" {
       source_security_group_id = module.ALB_SG.SG_id
       type                     = "ingress"
     }
+    "ssh" = {
+      port        = 22
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+      type        = "ingress"
+    }
     "all" = {
       port        = 0
       protocol    = "-1"
