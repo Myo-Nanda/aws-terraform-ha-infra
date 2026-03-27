@@ -57,7 +57,7 @@ resource "aws_nat_gateway" "Dev_NAT_GW" {
   tags = {
     Name = "${var.tag_value} NAT GW"
   }
-  
+
   depends_on = [aws_internet_gateway.Dev_IGW]
 }
 

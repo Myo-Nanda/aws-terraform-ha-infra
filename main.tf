@@ -103,7 +103,7 @@ module "Application_LoadBalaner" {
   vpc_id                = module.Dev_VPC.vpc_id
   subnet_id             = module.Dev_VPC.public_subnet_id
   vpc_security_group_id = module.ALB_SG.SG_id
-  tg_name = "dev-vms"
+  tg_name               = "dev-vms"
 }
 
 module "Auto_Scaling_Group" {
