@@ -42,6 +42,25 @@ resource "aws_internet_gateway" "Dev_IGW" {
   }
 }
 
+resource "aws_eip" "Dev_EIP" {
+  domain = "vpc"
+
+  tags = {
+    Name = "${var.tag_value} EIP"
+  }
+}
+
+resource "aws_nat_gateway" "Dev_NAT_GW" {
+  allocation_id = aws_eip.Dev_EIP.id
+  subnet_id     = aws_subnet.Public_Subnet[0].id
+
+  tags = {
+    Name = "${var.tag_value} NAT GW"
+  }
+  
+  depends_on = [aws_internet_gateway.Dev_IGW]
+}
+
 resource "aws_route_table" "Public_RT" {
   vpc_id = aws_vpc.Dev_VPC.id
 
@@ -55,18 +74,23 @@ resource "aws_route_table" "Public_RT" {
   }
 }
 
-resource "aws_route_table_association" "Dev_Public_Sub_RT" {
-  count          = 2
-  subnet_id      = aws_subnet.Public_Subnet[count.index].id
-  route_table_id = aws_route_table.Public_RT.id
-}
-
 resource "aws_route_table" "Private_RT" {
   vpc_id = aws_vpc.Dev_VPC.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_nat_gateway.Dev_NAT_GW.id
+  }
 
   tags = {
     Name = "${var.tag_value} Private RT"
   }
+}
+
+resource "aws_route_table_association" "Dev_Public_Sub_RT" {
+  count          = 2
+  subnet_id      = aws_subnet.Public_Subnet[count.index].id
+  route_table_id = aws_route_table.Public_RT.id
 }
 
 resource "aws_route_table_association" "Dev_Private_Sub_RT" {
