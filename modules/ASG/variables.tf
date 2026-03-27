@@ -1,3 +1,9 @@
+variable "key_path" {
+  description = "File path to the ssh public key"
+  type        = string
+  default     = "/home/robin/.ssh/id_rsa.pub"
+}
+
 variable "launch_template_name" {
   description = "Name of Launch Template"
   type        = string

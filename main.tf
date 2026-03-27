@@ -91,34 +91,35 @@ data "aws_ami" "ami_id" {
 #   custome_script        = "./custome_script.sh"
 # }
 
-# module "Application_LoadBalaner" {
-#   source = "./modules/loadblancer"
+module "Application_LoadBalaner" {
+  source = "./modules/loadblancer"
 
-#   vpc_id                = module.Dev_VPC.vpc_id
-#   subnet_id             = module.Dev_VPC.public_subnet_id
-#   vpc_security_group_id = module.ALB_SG.SG_id
-#   tg_name = "dev-vms"
-# }
+  vpc_id                = module.Dev_VPC.vpc_id
+  subnet_id             = module.Dev_VPC.public_subnet_id
+  vpc_security_group_id = module.ALB_SG.SG_id
+  tg_name = "dev-vms"
+}
 
-# module "Auto_Scaling_Group" {
-#   source = "./modules/ASG"
+module "Auto_Scaling_Group" {
+  source = "./modules/ASG"
 
-#   launch_template_name = "dev-launch-template"
-#   ami_id               = data.aws_ami.ami_id.id
-#   instance_type        = "t3.micro"
-#   key_name             = "DEV_key"
-#   vpc_security_id      = module.Instance_SG.SG_id
-#   custome_script       = "./custome_script.sh"
-#   tag_value            = "Dev"
+  launch_template_name = "dev-launch-template"
+  ami_id               = data.aws_ami.ami_id.id
+  instance_type        = "t3.micro"
+  key_name             = "DEV_key"
+  key_path             = "/home/robin/.ssh/id_rsa.pub"
+  vpc_security_id      = module.Instance_SG.SG_id
+  custome_script       = "./custome_script.sh"
+  tag_value            = "Dev"
 
-#   asg_name         = "dev-auto-scaling-group"
-#   max_size         = 3
-#   min_size         = 1
-#   desired_capacity = 1
-#   ASG_version      = "$Latest"
-#   subnet_id        = module.Dev_VPC.private_subnet_id
-#   target_group_arn = module.Application_LoadBalaner.target_group_arn
-# }
+  asg_name         = "dev-auto-scaling-group"
+  max_size         = 4
+  min_size         = 1
+  desired_capacity = 2
+  ASG_version      = "$Latest"
+  subnet_id        = module.Dev_VPC.private_subnet_id
+  target_group_arn = module.Application_LoadBalaner.target_group_arn
+}
 
 # output "instance_id" {
 #   value = module.Target_Instance.instance_id
@@ -128,6 +129,6 @@ data "aws_ami" "ami_id" {
 #   value = module.Application_LoadBalaner.target_group_arn
 # }
 
-# output "alb_dns_name" {
-#   value = module.Application_LoadBalaner.alb_dns_name
-# }
+output "alb_dns_name" {
+  value = module.Application_LoadBalaner.alb_dns_name
+}

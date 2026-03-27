@@ -1,8 +1,13 @@
+resource "aws_key_pair" "Dev_VM_Key" {
+  key_name   = var.key_name
+  public_key = file(var.key_path)
+}
+
 resource "aws_launch_template" "ASG_Launch_Template" {
   name          = var.launch_template_name
   image_id      = var.ami_id
   instance_type = var.instance_type
-  # key_name      = var.key_name
+  key_name      = var.key_name
 
   vpc_security_group_ids = [var.vpc_security_id]
 
