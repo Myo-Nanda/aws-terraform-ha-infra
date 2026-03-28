@@ -1,8 +1,8 @@
-variable "key_path" {
-  description = "File path to the ssh public key"
-  type        = string
-  default     = "/home/robin/.ssh/id_rsa.pub"
-}
+# variable "key_path" {
+#   description = "File path to the ssh public key"
+#   type        = string
+#   default     = "/home/robin/.ssh/id_rsa.pub"
+# }
 
 variable "launch_template_name" {
   description = "Name of Launch Template"
@@ -22,15 +22,16 @@ variable "instance_type" {
   default     = "t3.micro"
 }
 
-variable "key_name" {
-  description = "SSH Key Pair Name"
-  type        = string
-}
+# variable "key_name" {
+#   description = "SSH Key Pair Name"
+#   type        = string
+#   default = "Dev-Key"
+# }
 
 variable "iam_role" {
   description = "IAM role for instance"
-  type = string
-  default = "EC2-SSM"
+  type        = string
+  default     = "EC2-SSM"
 }
 
 variable "vpc_security_id" {

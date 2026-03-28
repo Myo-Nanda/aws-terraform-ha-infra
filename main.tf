@@ -57,7 +57,7 @@ module "Instance_SG" {
       source_security_group_id = module.ALB_SG.SG_id
       type                     = "ingress"
     }
-      "ssh" = {
+    "ssh" = {
       port        = 22
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
@@ -111,12 +111,13 @@ module "Auto_Scaling_Group" {
 
   launch_template_name = "dev-launch-template"
   ami_id               = data.aws_ami.ami_id.id
-  instance_type        = "t3.micro"
-  key_name             = "DEV_key"
-  key_path             = "/home/robin/.ssh/id_rsa.pub"
-  vpc_security_id      = module.Instance_SG.SG_id
-  custome_script       = "./custome_script.sh"
-  tag_value            = "Dev"
+  instance_type        = "t3.small"
+  #key_name             = "DEV_key"
+  #key_path             = "/home/robin/.ssh/id_rsa.pub"
+  vpc_security_id = module.Instance_SG.SG_id
+  custome_script  = "./custome_script.sh"
+  tag_value       = "Dev"
+  iam_role        = "EC2-SSM"
 
   asg_name         = "dev-auto-scaling-group"
   max_size         = 4
