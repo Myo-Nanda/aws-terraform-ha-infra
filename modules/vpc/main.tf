@@ -77,10 +77,10 @@ resource "aws_route_table" "Public_RT" {
 resource "aws_route_table" "Private_RT" {
   vpc_id = aws_vpc.Dev_VPC.id
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.Dev_NAT_GW.id
-  }
+  # route {
+  #   cidr_block = "0.0.0.0/0"
+  #   gateway_id = aws_nat_gateway.Dev_NAT_GW.id
+  # }
 
   tags = {
     Name = "${var.tag_value} Private RT"

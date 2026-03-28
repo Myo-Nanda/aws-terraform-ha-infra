@@ -128,13 +128,13 @@ module "Auto_Scaling_Group" {
   target_group_arn = module.Application_LoadBalaner.target_group_arn
 }
 
-# output "instance_id" {
-#   value = module.Target_Instance.instance_id
-# }
+output "instance_id" {
+  value = module.Target_Instance.instance_id
+}
 
-# output "target_group_arn" {
-#   value = module.Application_LoadBalaner.target_group_arn
-# }
+output "target_group_arn" {
+  value = module.Application_LoadBalaner.target_group_arn
+}
 
 output "alb_dns_name" {
   value = module.Application_LoadBalaner.alb_dns_name
