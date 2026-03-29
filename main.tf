@@ -1,3 +1,4 @@
+#Terraform and AWS provider configuration
 terraform {
   required_providers {
     aws = {
@@ -9,16 +10,17 @@ terraform {
 }
 
 provider "aws" {
-  region  = "ap-southeast-1"
-  profile = "Mgod"
+  region  = "ap-southeast-1" #default region
 }
 
-module "Dev_VPC" {
+#Create VPC, Subnets and other related resources
+module "VPC" {
   source = "./modules/vpc"
 
   sub_number = 2
 }
 
+#Security Group for Application Load Balancer
 module "ALB_SG" {
   source = "./modules/security_group"
 
@@ -26,6 +28,8 @@ module "ALB_SG" {
   sg_name        = "ALB"
   sg_description = "Security Group for Load Balancer"
 
+  #Allow http traffic from internet
+  #Allow all outgoing traffic
   sg_rule = {
     "http" = {
       port        = 80
@@ -42,26 +46,22 @@ module "ALB_SG" {
   }
 }
 
+#Security group for EC2 instances which launch by AutoScaling Group
 module "Instance_SG" {
-  depends_on = [module.ALB_SG]
   source     = "./modules/security_group"
 
   vpc_id         = module.Dev_VPC.vpc_id
   sg_name        = "Instance"
   sg_description = "Security Group for Instances"
 
+  #Only allow http traffic  from ALB security group and
+  #All outgoin traffic for updates/external calls
   sg_rule = {
     "http" = {
       port                     = 80
       protocol                 = "tcp"
       source_security_group_id = module.ALB_SG.SG_id
       type                     = "ingress"
-    }
-    "ssh" = {
-      port        = 22
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-      type        = "ingress"
     }
     "all" = {
       port        = 0
@@ -72,6 +72,7 @@ module "Instance_SG" {
   }
 }
 
+#Data source to find the AMI ID for instnaces
 data "aws_ami" "ami_id" {
   most_recent = true
 
@@ -88,16 +89,8 @@ data "aws_ami" "ami_id" {
   owners = ["137112412989"]
 }
 
-# module "Target_Instance" {
-#   source = "./modules/instance"
-
-#   subnet_id             = module.Dev_VPC.private_subnet_id
-#   vpc_security_group_id = module.Instance_SG.SG_id
-#   ami_id                = data.aws_ami.ami_id.id
-#   custome_script        = "./custome_script.sh"
-# }
-
-module "Application_LoadBalaner" {
+#Application Load Balancer, along with listener and target group
+module "Application_LoadBalancer" {
   source = "./modules/loadblancer"
 
   vpc_id                = module.Dev_VPC.vpc_id
@@ -106,18 +99,17 @@ module "Application_LoadBalaner" {
   tg_name               = "dev-vms"
 }
 
-module "Auto_Scaling_Group" {
+#AutoScaling Group with scale up and scale down rule using cloud watch alarms, along with launch template for instances
+module "AutoScaling_Group" {
   source = "./modules/ASG"
 
   launch_template_name = "dev-launch-template"
   ami_id               = data.aws_ami.ami_id.id
   instance_type        = "t3.small"
-  #key_name             = "DEV_key"
-  #key_path             = "/home/robin/.ssh/id_rsa.pub"
   vpc_security_id = module.Instance_SG.SG_id
-  custome_script  = "./custome_script.sh"
+  custome_script  = "./custome_script.sh" #user_data to install nginx
   tag_value       = "Dev"
-  iam_role        = "EC2-SSM"
+  iam_role        = "EC2-SSM" #IAM role to connect instance via Session Manager
 
   asg_name         = "dev-auto-scaling-group"
   max_size         = 4
@@ -128,14 +120,7 @@ module "Auto_Scaling_Group" {
   target_group_arn = module.Application_LoadBalaner.target_group_arn
 }
 
-output "instance_id" {
-  value = module.Target_Instance.instance_id
-}
-
-output "target_group_arn" {
-  value = module.Application_LoadBalaner.target_group_arn
-}
-
+#ALB DNS name to access the web app
 output "alb_dns_name" {
   value = module.Application_LoadBalaner.alb_dns_name
 }
