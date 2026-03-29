@@ -1,4 +1,5 @@
-resource "aws_lb" "Dev_LB" {
+#Application Load Balaner
+resource "aws_lb" "load_balancer" {
   name               = var.lb_name
   internal           = false
   load_balancer_type = var.lb_type
@@ -10,7 +11,8 @@ resource "aws_lb" "Dev_LB" {
   }
 }
 
-resource "aws_lb_target_group" "LB_Target_Group" {
+#Target Group
+resource "aws_lb_target_group" "target_group" {
   name     = var.tg_name
   port     = var.port
   protocol = var.protocol
@@ -27,20 +29,14 @@ resource "aws_lb_target_group" "LB_Target_Group" {
   }
 }
 
-# resource "aws_lb_target_group_attachment" "LB_Target_Group_Attachment" {
-#   for_each         = var.instance_id
-#   target_group_arn = aws_lb_target_group.LB_Target_Group.arn
-#   target_id        = each.value
-#   port             = var.port
-# }
-
+#listener, ALB to forward traffic to instances
 resource "aws_lb_listener" "front_end" {
-  load_balancer_arn = aws_lb.Dev_LB.arn
+  load_balancer_arn = aws_lb.load_balancer.arn
   port              = var.port
   protocol          = var.protocol
 
   default_action {
     type             = var.listener_type
-    target_group_arn = aws_lb_target_group.LB_Target_Group.arn
+    target_group_arn = aws_lb_target_group.target_group.arn
   }
 }

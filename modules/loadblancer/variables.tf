@@ -15,7 +15,7 @@ variable "vpc_security_group_id" {
 }
 
 variable "subnet_id" {
-  description = "Subnets ID to lauch the instances"
+  description = "Subnets ID to launch the instances in"
 }
 
 variable "tag_value" {
@@ -34,18 +34,14 @@ variable "vpc_id" {
   description = "ID of VPC to associate security group"
 }
 
-# variable "instance_id" {
-#   description = "ID of Instance to attach at Target Group"
-# }
-
 variable "port" {
-  description = "port"
-  type        = string
-  default     = "80"
+  description = "port number to for listener"
+  type        = number
+  default     = 80
 }
 
 variable "protocol" {
-  description = "protocol"
+  description = "protocol for listener"
   type        = string
   default     = "HTTP"
 }
