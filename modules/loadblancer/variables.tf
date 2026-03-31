@@ -12,10 +12,12 @@ variable "lb_type" {
 
 variable "vpc_security_group_id" {
   description = "Security Group ID to attach in Instance"
+  type        = string
 }
 
 variable "subnet_id" {
   description = "Subnets ID to launch the instances in"
+  type        = list(string)
 }
 
 variable "tag_value" {
@@ -32,6 +34,7 @@ variable "tg_name" {
 
 variable "vpc_id" {
   description = "ID of VPC to associate security group"
+  type        = string
 }
 
 variable "port" {

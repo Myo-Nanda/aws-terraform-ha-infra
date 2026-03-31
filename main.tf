@@ -3,14 +3,14 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 6.0"
+      version = "~> 6.38.0"
     }
   }
   required_version = ">= 1.12"
 }
 
 provider "aws" {
-  region  = "ap-southeast-1" #default region
+  region = "ap-southeast-1" #default region
 }
 
 #Create VPC, Subnets and other related resources
@@ -24,7 +24,7 @@ module "VPC" {
 module "ALB_SG" {
   source = "./modules/security_group"
 
-  vpc_id         = module.Dev_VPC.vpc_id
+  vpc_id         = module.VPC.vpc_id
   sg_name        = "ALB"
   sg_description = "Security Group for Load Balancer"
 
@@ -48,9 +48,9 @@ module "ALB_SG" {
 
 #Security group for EC2 instances which launch by AutoScaling Group
 module "Instance_SG" {
-  source     = "./modules/security_group"
+  source = "./modules/security_group"
 
-  vpc_id         = module.Dev_VPC.vpc_id
+  vpc_id         = module.VPC.vpc_id
   sg_name        = "Instance"
   sg_description = "Security Group for Instances"
 
@@ -93,8 +93,8 @@ data "aws_ami" "ami_id" {
 module "Application_LoadBalancer" {
   source = "./modules/loadblancer"
 
-  vpc_id                = module.Dev_VPC.vpc_id
-  subnet_id             = module.Dev_VPC.public_subnet_id
+  vpc_id                = module.VPC.vpc_id
+  subnet_id             = module.VPC.public_subnet_ids
   vpc_security_group_id = module.ALB_SG.SG_id
   tg_name               = "dev-vms"
 }
@@ -106,21 +106,21 @@ module "AutoScaling_Group" {
   launch_template_name = "dev-launch-template"
   ami_id               = data.aws_ami.ami_id.id
   instance_type        = "t3.small"
-  vpc_security_id = module.Instance_SG.SG_id
-  custome_script  = "./custome_script.sh" #user_data to install nginx
-  tag_value       = "Dev"
-  iam_role        = "EC2-SSM" #IAM role to connect instance via Session Manager
+  vpc_security_id      = module.Instance_SG.SG_id
+  custome_script       = "./custome_script.sh" #user_data to install nginx
+  tag_value            = "Dev"
+  iam_role             = "EC2-SSM" #IAM role to connect instance via Session Manager
 
   asg_name         = "dev-auto-scaling-group"
   max_size         = 4
   min_size         = 1
   desired_capacity = 2
   ASG_version      = "$Latest"
-  subnet_id        = module.Dev_VPC.private_subnet_id
-  target_group_arn = module.Application_LoadBalaner.target_group_arn
+  subnet_id        = module.VPC.private_subnet_ids
+  target_group_arn = module.Application_LoadBalancer.target_group_arn
 }
 
 #ALB DNS name to access the web app
-output "alb_dns_name" {
-  value = module.Application_LoadBalaner.alb_dns_name
-}
+# output "alb_dns_name" {
+#   value = module.Application_LoadBalaner.alb_dns_name
+# }
