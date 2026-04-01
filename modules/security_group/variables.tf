@@ -24,7 +24,8 @@ variable "tag_value" {
 variable "sg_rule" {
   description = "Map of rules to be added to the Security Group. Each rule should have a unique key and the value should be an object with the following attributes: port, protocol, cidr_blocks (optional), source_security_group_id (optional), and type (ingress or egress)."
   type = map(object({
-    port                     = number
+    from_port                = number
+    to_port                  = number
     protocol                 = string
     cidr_blocks              = optional(list(string))
     source_security_group_id = optional(string)
@@ -32,23 +33,25 @@ variable "sg_rule" {
   }))
   default = {
     "ssh" = {
-      port        = 22
+      from_port        = 22
+      to_port          = 22
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
       type        = "ingress"
     }
     "http" = {
-      port                     = 80
+      from_port                = 80
+      to_port                  = 80
       protocol                 = "tcp"
       source_security_group_id = "sg-06c6ac90b43d0db1f"
       type                     = "ingress"
     }
     "all_out" = {
-      port        = 0
+      from_port        = 0
+      to_port          = 0
       protocol    = "-1"
       cidr_blocks = ["0.0.0.0/0"]
       type        = "egress"
     }
   }
 }
-

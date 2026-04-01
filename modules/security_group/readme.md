@@ -15,13 +15,15 @@ module "ALB_SG" {
 
   sg_rule = {
     "http" = {
-      port        = 80
+      from_port   = 80
+      to_port     = 80
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
       type        = "ingress"
     }
     "all" = {
-      port        = 0
+      from_port   = 0
+      to_port     = 0
       protocol    = "-1"
       cidr_blocks = ["0.0.0.0/0"]
       type        = "egress"
@@ -38,7 +40,7 @@ module "ALB_SG" {
 | tag_value | Value for Name tag to identify the Security Group. | string | "Dev" |
 | sg_name | Name of the Security Group. | string | "Dev Security Group" |
 | sg_description | Description of the Security Group. | string | "allow inbound HTTP, SSH and allow outbound all " |
-| sg_rule | Map of rules to be added to the Security Group. Each rule should have a unique key and the value should be an object with the following attributes: port, protocol, cidr_blocks (optional), source_security_group_id (optional), and type (ingress or egress). | map(object({ port = number, protocol = string, cidr_blocks = optional(list(string)), source_security_group_id = optional(string), type = string })) | n/a |
+| sg_rule | Map of rules to be added to the Security Group. Each rule should have a unique key and the value should be an object with the following attributes: port, protocol, cidr_blocks (optional), source_security_group_id (optional), and type (ingress or egress). | map(object({ port = number, protocol = string, cidr_blocks = optional(list(string)), source_security_group_id = optional(string), type = string })) | (see variables.tf    ) |
 
 ## Outputs
 
