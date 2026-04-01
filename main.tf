@@ -17,7 +17,9 @@ provider "aws" {
 module "VPC" {
   source = "./modules/vpc"
 
-  sub_number = 2
+  sub_number   = 2
+  cidr_newbits = 8
+  tag_value    = "Production"
 }
 
 #Security Group for Application Load Balancer
