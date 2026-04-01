@@ -29,6 +29,7 @@ module "ALB_SG" {
   vpc_id         = module.VPC.vpc_id
   sg_name        = "ALB"
   sg_description = "Security Group for Load Balancer"
+  tag_value      = "Production"
 
   #Allow http traffic from internet
   #Allow all outgoing traffic
@@ -56,7 +57,7 @@ module "Instance_SG" {
   sg_name        = "Instance"
   sg_description = "Security Group for Instances"
 
-  #Only allow http traffic  from ALB security group and
+  #Only allow http traffic from ALB security group and
   #All outgoin traffic for updates/external calls
   sg_rule = {
     "http" = {

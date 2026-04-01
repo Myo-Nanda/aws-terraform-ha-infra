@@ -1,26 +1,28 @@
 variable "sg_name" {
-  description = "Security Group Name"
+  description = "Name of the Security Group"
   type        = string
   default     = "Dev Security Group"
 }
 
 variable "sg_description" {
-  description = "Details of the Security Group"
+  description = "Description of the Security Group"
   type        = string
   default     = "allow inbound HTTP, SSH and allow outbound all "
 }
 
 variable "vpc_id" {
-  description = "ID of VPC to associate security group"
+  description = "ID of the VPC where the Security Group will be created"
+  type        = string
 }
 
 variable "tag_value" {
-  description = "Tag Name"
+  description = "Value for the Name tag of the Security Group"
   type        = string
   default     = "Dev"
 }
 
 variable "sg_rule" {
+  description = "Map of rules to be added to the Security Group. Each rule should have a unique key and the value should be an object with the following attributes: port, protocol, cidr_blocks (optional), source_security_group_id (optional), and type (ingress or egress)."
   type = map(object({
     port                     = number
     protocol                 = string
