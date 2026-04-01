@@ -14,8 +14,8 @@ resource "aws_lb" "load_balancer" {
 #Target Group
 resource "aws_lb_target_group" "target_group" {
   name     = var.tg_name
-  port     = var.port
-  protocol = var.protocol
+  port     = var.target_group_port
+  protocol = var.target_group_protocol
   vpc_id   = var.vpc_id
 
   health_check {
@@ -32,8 +32,8 @@ resource "aws_lb_target_group" "target_group" {
 #listener, ALB to forward traffic to instances
 resource "aws_lb_listener" "front_end" {
   load_balancer_arn = aws_lb.load_balancer.arn
-  port              = var.port
-  protocol          = var.protocol
+  port              = var.listener_port
+  protocol          = var.listener_protocol
 
   default_action {
     type             = var.listener_type

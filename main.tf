@@ -100,10 +100,18 @@ data "aws_ami" "ami_id" {
 module "Application_LoadBalancer" {
   source = "./modules/loadblancer"
 
+  lb_name               = "WebApp-ALB"
+  lb_type               = "application"
   vpc_id                = module.VPC.vpc_id
   subnet_id             = module.VPC.public_subnet_ids
   vpc_security_group_id = module.ALB_SG.SG_id
-  tg_name               = "dev-vms"
+  tag_value             = "Production"
+  tg_name               = "WebApp-Target-Group"
+  target_group_port     = 80
+  target_group_protocol = "HTTP"
+  listener_port         = 80
+  listener_protocol     = "HTTP"
+  listener_type         = "forward"
 }
 
 #AutoScaling Group with scale up and scale down rule using cloud watch alarms, along with launch template for instances
