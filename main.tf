@@ -35,13 +35,15 @@ module "ALB_SG" {
   #Allow all outgoing traffic
   sg_rule = {
     "http" = {
-      port        = 80
+      from_port   = 80
+      to_port     = 80
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
       type        = "ingress"
     }
     "all" = {
-      port        = 0
+      from_port   = 0
+      to_port     = 0
       protocol    = "-1"
       cidr_blocks = ["0.0.0.0/0"]
       type        = "egress"
@@ -61,13 +63,15 @@ module "Instance_SG" {
   #All outgoin traffic for updates/external calls
   sg_rule = {
     "http" = {
-      port                     = 80
+      from_port                = 80
+      to_port                  = 80
       protocol                 = "tcp"
       source_security_group_id = module.ALB_SG.SG_id
       type                     = "ingress"
     }
     "all" = {
-      port        = 0
+      from_port   = 0
+      to_port     = 0
       protocol    = "-1"
       cidr_blocks = ["0.0.0.0/0"]
       type        = "egress"
