@@ -20,4 +20,3 @@ The architecture consists of the following components:
 - An AWS account
 - Terraform installed on your local machine
 - AWS CLI configured with your credentials
-
