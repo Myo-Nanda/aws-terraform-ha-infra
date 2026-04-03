@@ -1,97 +1,83 @@
-# variable "key_path" {
-#   description = "File path to the ssh public key"
-#   type        = string
-#   default     = "/home/robin/.ssh/id_rsa.pub"
-# }
-
 variable "launch_template_name" {
   description = "Name of Launch Template"
   type        = string
-  default     = "dev-launch-template"
+  default     = "launch-template"
 }
 
 variable "ami_id" {
   description = "ID for AMI"
   type        = string
-  default     = "ami-0ac0e4288aa341886"
 }
 
 variable "instance_type" {
-  description = "Type of EC2 instance"
+  description = "Type of EC2 instance (e.g., t3.small, t3.medium)."
   type        = string
-  default     = "t3.micro"
+  default     = "t3.small"
 }
 
-# variable "key_name" {
-#   description = "SSH Key Pair Name"
-#   type        = string
-#   default = "Dev-Key"
-# }
-
 variable "iam_role" {
-  description = "IAM role for instance"
+  description = "The name of the IAM role to be attached to the instances"
   type        = string
-  default     = "EC2-SSM"
 }
 
 variable "vpc_security_id" {
-  description = "VPC Security Group ID"
+  description = "VPC Security Group ID to associate with the instances"
   type        = string
 }
 
 variable "custome_script" {
-  description = "Path to custom script file"
+  description = "Path to custom script file that will be executed on instance launch (user_data)"
   type        = string
 }
 
 variable "tag_value" {
-  description = "Tag Name"
+  description = "The value to identify the ASG resources"
   type        = string
-  default     = "Dev"
+  default     = "Development"
 }
 
 variable "asg_name" {
   description = "Name of Auto Scaling Group"
   type        = string
-  default     = "dev-auto-scaling-group"
+  default     = "auto-scaling-group"
 }
 
 variable "max_size" {
-  description = "Maximum size of Auto Scaling Group"
+  description = "Maximum number of instances the ASG can scale out to"
   type        = number
-  default     = 3
+  default     = 4
 }
 
 variable "min_size" {
-  description = "Minimum size of Auto Scaling Group"
+  description = "Minimum number of instances the ASG can scale in to"
   type        = number
   default     = 1
 }
 
 variable "desired_capacity" {
-  description = "Desired capacity of Auto Scaling Group"
+  description = "Number of instances that should be running in the Auto Scaling Group"
   type        = number
   default     = 2
 }
 
 variable "ASG_version" {
-  description = "Launch Template version"
+  description = "Launch Template version to use for Auto Scaling Group (e.g., $Latest, $Default, or specific version number)"
   type        = string
   default     = "$Latest"
 }
 
 variable "target_group_arn" {
-  description = "ARN of Target Group"
+  description = "Target Group ARN to attach Auto Scaling Group instances to"
   type        = string
 }
 
 variable "subnet_id" {
-  description = "Subnets ID to lauch the instances"
+  description = "List of subnet IDs for Auto Scaling Group instances to launch in"
   type        = list(string)
 }
 
 variable "scaling_adjustment" {
-  description = "Number of instances to add or remove when the alarm triggers"
+  description = "Number of instances to add or remove when the cloudwatch alarm triggers"
   type        = number
   default     = 1
 
@@ -105,7 +91,7 @@ variable "adjustment_type" {
 }
 
 variable "cooldown_seconds" {
-  description = "Cooldown period in seconds after a scaling activity"
+  description = "Cooldown period in seconds after a scaling activity before another scaling activity can occur"
   type        = number
   default     = 300
 
@@ -119,36 +105,31 @@ variable "evaluation_periods" {
 }
 
 variable "metric_name" {
-  description = "Name of the CloudWatch metric to monitor (e.g., CPUUtilization)"
+  description = "Name of the CloudWatch metric to monitor (e.g., CPUUtilization, NetworkIn, MemoryUtilization)"
   type        = string
   default     = "CPUUtilization"
-
 }
 
 variable "namespace" {
-  description = "Namespace of the CloudWatch metric (e.g., AWS/EC2)"
+  description = "Namespace of the CloudWatch metric (e.g., AWS/EC2, AWS/ApplicationELB)"
   type        = string
   default     = "AWS/EC2"
-
 }
 
 variable "period" {
   description = "The period, in seconds, over which the specified statistic is applied"
   type        = number
   default     = 300
-
 }
 
 variable "statistic" {
-  description = "The statistic to apply to the alarm's associated metric"
+  description = "The statistic to apply to the alarm's associated metric (e.g., Average, Sum, Minimum, Maximum)"
   type        = string
   default     = "Average"
-
 }
 
 variable "threshold" {
-  description = "The value against which the specified statistic is compared"
+  description = "The value against which the specified statistic is evaluated"
   type        = number
   default     = 85
-
 }

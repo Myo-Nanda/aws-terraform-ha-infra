@@ -26,7 +26,7 @@ resource "aws_security_group_rule" "SG_cidr_rule" {
 
 # Create security group rules for rules that specify source_security_group_id instead of cidr_blocks
 resource "aws_security_group_rule" "SG_sourceID_rule" {
-  for_each                 = { for k, v in var.sg_rule : k => v if v.cidr_blocks == null && v.source_security_group_id != null } # Filter rules that do not have cidr_blocks defined and source_security_group_id defined
+  for_each                 = { for k, v in var.sg_rule : k => v if v.cidr_blocks == null } # Filter rules that do not have cidr_blocks defined and source_security_group_id defined
   security_group_id        = aws_security_group.Security_Group.id
   type                     = each.value.type
   from_port                = each.value.from_port

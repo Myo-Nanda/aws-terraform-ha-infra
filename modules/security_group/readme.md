@@ -1,6 +1,6 @@
 # Security Group Module
 
-Create a Security Group with Inbound and Outbound Rules.
+This module creates a Security Group with specified ingress and egress rules to control inbound and outbound traffic for resources such as Load Balancers and EC2 Instances. The Security Group will enhance the security of your applications by allowing only authorized traffic based on defined rules.
 
 ## Usage
 
@@ -34,13 +34,13 @@ module "ALB_SG" {
 
 ## Inputs
 
-| Name | Description | Type | Default |
-| :--------: | :----------------: | :----: | :-----------: |
-| vpc_id | ID of the VPC where the Security Group will be created. | string | n/a |
-| tag_value | Value for Name tag to identify the Security Group. | string | "Dev" |
-| sg_name | Name of the Security Group. | string | "Dev Security Group" |
-| sg_description | Description of the Security Group. | string | "allow inbound HTTP, SSH and allow outbound all " |
-| sg_rule | Map of rules to be added to the Security Group. Each rule should have a unique key and the value should be an object with the following attributes: port, protocol, cidr_blocks (optional), source_security_group_id (optional), and type (ingress or egress). | map(object({ port = number, protocol = string, cidr_blocks = optional(list(string)), source_security_group_id = optional(string), type = string })) | (see variables.tf    ) |
+| Name | Description | Type | Default | Required |
+| :--------: | :----------------: | :----: | :-----------: | :------: |
+| vpc_id | ID of the VPC where the Security Group will be created. | string | n/a | yes |
+| sg_name | Name of the Security Group. | string | "Development" | no |
+| sg_description | Description of the Security Group. | string | "allow inbound HTTP, SSH and allow outbound all " | no |
+| tag_value | Value for Name tag to identify the Security Group. | string | "Development" | no |
+| sg_rule | Map of rules to be added to the Security Group. Each rule should have a unique key and the value should be an object with the following attributes: port, protocol, cidr_blocks (optional), source_security_group_id (optional), and type (ingress or egress). | map(object({ port = number, protocol = string, cidr_blocks = optional(list(string)), source_security_group_id = optional(string), type = string })) | (see variables.tf) | no |
 
 ## Outputs
 

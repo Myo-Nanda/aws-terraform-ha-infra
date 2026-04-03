@@ -58,6 +58,7 @@ module "Instance_SG" {
   vpc_id         = module.VPC.vpc_id
   sg_name        = "Instance"
   sg_description = "Security Group for Instances"
+  tag_value      = "Production"
 
   #Only allow http traffic from ALB security group and
   #All outgoin traffic for updates/external calls
@@ -100,42 +101,53 @@ data "aws_ami" "ami_id" {
 module "Application_LoadBalancer" {
   source = "./modules/loadblancer"
 
-  lb_name               = "WebApp-ALB"
-  lb_type               = "application"
-  vpc_id                = module.VPC.vpc_id
-  subnet_id             = module.VPC.public_subnet_ids
-  vpc_security_group_id = module.ALB_SG.SG_id
-  tag_value             = "Production"
-  tg_name               = "WebApp-Target-Group"
-  target_group_port     = 80
-  target_group_protocol = "HTTP"
-  listener_port         = 80
-  listener_protocol     = "HTTP"
-  listener_type         = "forward"
+  lb_name                = "WebApp-ALB"
+  lb_type                = "application"
+  vpc_id                 = module.VPC.vpc_id
+  subnet_id              = module.VPC.public_subnet_ids
+  vpc_security_group_ids = [module.ALB_SG.SG_id]
+  tag_value              = "Production"
+  target_group_name      = "WebApp-Target-Group"
+  target_group_port      = 80
+  target_group_protocol  = "HTTP"
+  listener_port          = 80
+  listener_protocol      = "HTTP"
+  listener_type          = "forward"
 }
 
 #AutoScaling Group with scale up and scale down rule using cloud watch alarms, along with launch template for instances
 module "AutoScaling_Group" {
   source = "./modules/ASG"
 
-  launch_template_name = "dev-launch-template"
+  launch_template_name = "Prod-launch-template"
   ami_id               = data.aws_ami.ami_id.id
   instance_type        = "t3.small"
   vpc_security_id      = module.Instance_SG.SG_id
   custome_script       = "./custome_script.sh" #user_data to install nginx
-  tag_value            = "Dev"
+  tag_value            = "Production"
   iam_role             = "EC2-SSM" #IAM role to connect instance via Session Manager
 
-  asg_name         = "dev-auto-scaling-group"
+  asg_name         = "Prod-auto-scaling-group"
   max_size         = 4
   min_size         = 1
   desired_capacity = 2
   ASG_version      = "$Latest"
   subnet_id        = module.VPC.private_subnet_ids
   target_group_arn = module.Application_LoadBalancer.target_group_arn
+
+  scaling_adjustment = 1
+  adjustment_type    = "ChangeInCapacity"
+  cooldown_seconds   = 300
+
+  evaluation_periods = 1
+  metric_name        = "CPUUtilization"
+  namespace          = "AWS/EC2"
+  period             = 300
+  statistic          = "Average"
+  threshold          = 85
 }
 
-#ALB DNS name to access the web app
-# output "alb_dns_name" {
-#   value = module.Application_LoadBalaner.alb_dns_name
-# }
+# ALB DNS name to access the web app
+output "alb_dns_name" {
+  value = module.Application_LoadBalancer.alb_dns_name
+}

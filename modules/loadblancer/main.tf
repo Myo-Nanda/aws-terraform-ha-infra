@@ -3,7 +3,7 @@ resource "aws_lb" "load_balancer" {
   name               = var.lb_name
   internal           = false
   load_balancer_type = var.lb_type
-  security_groups    = [var.vpc_security_group_id]
+  security_groups    = var.vpc_security_group_ids
   subnets            = var.subnet_id
 
   tags = {
@@ -13,7 +13,7 @@ resource "aws_lb" "load_balancer" {
 
 #Target Group
 resource "aws_lb_target_group" "target_group" {
-  name     = var.tg_name
+  name     = var.target_group_name
   port     = var.target_group_port
   protocol = var.target_group_protocol
   vpc_id   = var.vpc_id

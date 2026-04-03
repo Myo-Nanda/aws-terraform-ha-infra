@@ -10,9 +10,9 @@ variable "lb_type" {
   default     = "application"
 }
 
-variable "vpc_security_group_id" {
-  description = "Security Group ID to associate with Load Balancer"
-  type        = string
+variable "vpc_security_group_ids" {
+  description = "Security Group IDs to associate with Load Balancer"
+  type        = list(string)
 }
 
 variable "subnet_id" {
@@ -23,10 +23,10 @@ variable "subnet_id" {
 variable "tag_value" {
   description = "Tag value to identify the resources created by this module"
   type        = string
-  default     = "Dev"
+  default     = "Development"
 }
 
-variable "tg_name" {
+variable "target_group_name" {
   description = "Name of Target Group"
   type        = string
   default     = "dev-vms"

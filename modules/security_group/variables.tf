@@ -1,3 +1,8 @@
+variable "vpc_id" {
+  description = "ID of the VPC where the Security Group will be created"
+  type        = string
+}
+
 variable "sg_name" {
   description = "Name of the Security Group"
   type        = string
@@ -10,15 +15,10 @@ variable "sg_description" {
   default     = "allow inbound HTTP, SSH and allow outbound all "
 }
 
-variable "vpc_id" {
-  description = "ID of the VPC where the Security Group will be created"
-  type        = string
-}
-
 variable "tag_value" {
   description = "Value for the Name tag of the Security Group"
   type        = string
-  default     = "Dev"
+  default     = "Development"
 }
 
 variable "sg_rule" {
@@ -33,8 +33,8 @@ variable "sg_rule" {
   }))
   default = {
     "ssh" = {
-      from_port        = 22
-      to_port          = 22
+      from_port   = 22
+      to_port     = 22
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
       type        = "ingress"
@@ -47,8 +47,8 @@ variable "sg_rule" {
       type                     = "ingress"
     }
     "all_out" = {
-      from_port        = 0
-      to_port          = 0
+      from_port   = 0
+      to_port     = 0
       protocol    = "-1"
       cidr_blocks = ["0.0.0.0/0"]
       type        = "egress"
