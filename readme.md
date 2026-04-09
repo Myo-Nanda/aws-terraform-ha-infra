@@ -17,6 +17,7 @@ The architecture consists of the following components:
 
 ## Folder Structure
 
+```sh
 ├── custome_script.sh
 ├── main.tf
 ├── modules
@@ -45,6 +46,7 @@ The architecture consists of the following components:
 │       ├── readme.md
 │       └── variables.tf
 ├── readme.md
+```
 
 ## Prerequisites
 
