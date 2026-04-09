@@ -26,7 +26,7 @@ module "ALB" {
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|
+|:--------:|:--------:|:--------:|:--------:|:--------:|
 | lb_name | Name of the Load Balancer | string | "Development-LB" | no |
 | lb_type | Type of Load Balancer (application or network) | string | "application" | no |
 | vpc_security_group_ids | Security Group IDs to associate with Load Balancer | list(string) | - | yes |

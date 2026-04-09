@@ -18,7 +18,7 @@ module "Development_VPC" {
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-| :--------: | :----------------: | :----: | :-----------: |
+| :--------: | :----------------: | :----: | :-----------: | :--------: |
 | cidr_block | IPv4 range for VPC | string | "10.0.0.0/16" | no |
 | sub_number | Number of Subnets to create for public and private to distribute across available Availability Zones | number | 1 | no |
 | cidr_newbits | Number of new bits to add to VPC CIDR block for subnetting. For example, if VPC CIDR is 10.0.0.0/16 and cidr_newbits is 8, the resulting subnet CIDR will be 10.0.0.0/24 | number | 8 | no |
